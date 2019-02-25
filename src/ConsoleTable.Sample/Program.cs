@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
-using ConsoleTables;
+using ConsoleTable.Core;
 
-namespace ConsoleTables.Sample
+namespace ConsoleTable.Sample
 {
     class Program
     {
         static void Main(String[] args)
         {
-            var table = new ConsoleTable("one", "two", "three");
+            var table = new Core.ConsoleTable("one", "two", "three");
             table.AddRow(1, 2, 3)
                  .AddRow("this line should be longer", "yes it is", "oh");
 
@@ -16,31 +16,31 @@ namespace ConsoleTables.Sample
             table.Write();
 
             Console.WriteLine("\nFORMAT: MarkDown:\n");
-            table.Write(Format.MarkDown);
+            table.Write(ConsoleTableFormat.MarkDown);
 
             Console.WriteLine("\nFORMAT: Alternative:\n");
-            table.Write(Format.Alternative);
+            table.Write(ConsoleTableFormat.Alternative);
             Console.WriteLine();
 
             Console.WriteLine("\nFORMAT: Minimal:\n");
-            table.Write(Format.Minimal);
+            table.Write(ConsoleTableFormat.Minimal);
             Console.WriteLine();
 
-            table = new ConsoleTable("I've", "got", "nothing");
+            table = new Core.ConsoleTable("I've", "got", "nothing");
             table.Write();
             Console.WriteLine();
 
             var rows = Enumerable.Repeat(new Something(), 10);
 
-            
 
-            ConsoleTable.From<Something>(rows).Write();
+
+            Core.ConsoleTable.From<Something>(rows).Write();
 
             rows = Enumerable.Repeat(new Something(), 0);
-            ConsoleTable.From<Something>(rows).Write();
+            Core.ConsoleTable.From<Something>(rows).Write();
 
             var noCount =
-            new ConsoleTable(new ConsoleTableOptions
+            new Core.ConsoleTable(new ConsoleTableOptions
             {
                 Columns = new[] { "one", "two", "three" },
                 EnableCount = false

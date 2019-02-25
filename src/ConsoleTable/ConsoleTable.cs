@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ConsoleTables
+namespace ConsoleTable.Core
 {
     public class ConsoleTable
     {
@@ -15,8 +15,8 @@ namespace ConsoleTables
         public ConsoleTableOptions Options { get; protected set; }
 
         public ConsoleTable(params string[] columns)
-            :this(new ConsoleTableOptions { Columns = new List<string>(columns) })
-        {          
+            : this(new ConsoleTableOptions { Columns = new List<string>(columns) })
+        {
         }
 
         public ConsoleTable(ConsoleTableOptions options)
@@ -54,10 +54,10 @@ namespace ConsoleTables
             var table = new ConsoleTable();
 
             var columns = GetColumns<T>();
-                
+
             table.AddColumn(columns);
 
-            foreach (var propertyValues in values.Select(value => columns.Select(column => GetColumnValue<T>(value, column) )))
+            foreach (var propertyValues in values.Select(value => columns.Select(column => GetColumnValue<T>(value, column))))
                 table.AddRow(propertyValues.ToArray());
 
             return table;
@@ -181,7 +181,7 @@ namespace ConsoleTables
         {
             var delimiterStr = delimiter == char.MinValue ? string.Empty : delimiter.ToString();
             var format = (Enumerable.Range(0, Columns.Count)
-                .Select(i => " "+ delimiterStr + " {" + i + ",-" + columnLengths[i] + "}")
+                .Select(i => " " + delimiterStr + " {" + i + ",-" + columnLengths[i] + "}")
                 .Aggregate((s, a) => s + a) + " " + delimiterStr).Trim();
             return format;
         }
@@ -197,20 +197,20 @@ namespace ConsoleTables
             return columnLengths;
         }
 
-        public void Write(Format format = ConsoleTables.Format.Default)
+        public void Write(ConsoleTableFormat format = ConsoleTableFormat.Default)
         {
             switch (format)
             {
-                case ConsoleTables.Format.Default:
+                case ConsoleTableFormat.Default:
                     Console.WriteLine(ToString());
                     break;
-                case ConsoleTables.Format.MarkDown:
+                case ConsoleTableFormat.MarkDown:
                     Console.WriteLine(ToMarkDownString());
                     break;
-                case ConsoleTables.Format.Alternative:
+                case ConsoleTableFormat.Alternative:
                     Console.WriteLine(ToStringAlternative());
                     break;
-                case ConsoleTables.Format.Minimal:
+                case ConsoleTableFormat.Minimal:
                     Console.WriteLine(ToMinimalString());
                     break;
                 default:
@@ -219,7 +219,7 @@ namespace ConsoleTables
         }
 
         private static IEnumerable<string> GetColumns<T>()
-        {  
+        {
             return typeof(T).GetProperties().Select(x => x.Name).ToArray();
         }
 
@@ -235,7 +235,7 @@ namespace ConsoleTables
         public bool EnableCount { get; set; } = true;
     }
 
-    public enum Format
+    public enum ConsoleTableFormat
     {
         Default = 0,
         MarkDown = 1,
